@@ -20,14 +20,11 @@ public class AuthController {
 	
 	private final UserService service;
 	
-	
-
-	public AuthController() {
+	// Injeção de dependencia via metodo construtor
+	public AuthController(UserService service) {
 		super();
-		this.service = new UserService();
+		this.service = service;
 	}
-
-
 
 	@PostMapping("/signup")
 	public ResponseEntity<UserEntity> signup(@RequestBody SignupDTO dto) throws Exception{

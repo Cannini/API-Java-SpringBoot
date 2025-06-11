@@ -1,9 +1,22 @@
 package br.edu.atitus.api_sample.services;
 
-import br.edu.atitus.api_sample.entities.UserEntity;
+import org.springframework.stereotype.Service;
 
+import br.edu.atitus.api_sample.entities.UserEntity;
+import br.edu.atitus.api_sample.repositories.UserRespository;
+
+@Service
 public class UserService {
 	
+	private final UserRespository repository;
+	
+	
+	public UserService(UserRespository repository) {
+		super();
+		this.repository = repository;
+	}
+
+
 	public UserEntity save(UserEntity user) throws Exception {
 		if (user == null)
 			throw new Exception("Objeto não pode ser nulo");
@@ -27,8 +40,10 @@ public class UserService {
 		if (user.getType() == null)
 			throw new Exception("Tipo de usuário inválido");
 
+		if (repository.existsByEmail(user.getEmail()))
+			throw new Exception ("Ja esxiste usuario cadastrado com este e-mail");
 	
-	// TODO invocar método save da camda repository
+		repository.save(user);
 		
 		return user;
 	}
