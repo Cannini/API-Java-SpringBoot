@@ -1,5 +1,6 @@
 package br.edu.atitus.api_sample.services;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.edu.atitus.api_sample.entities.UserEntity;
@@ -9,11 +10,12 @@ import br.edu.atitus.api_sample.repositories.UserRespository;
 public class UserService {
 	
 	private final UserRespository repository;
+	private final PasswordEncoder passwordEncoder;
 	
-	
-	public UserService(UserRespository repository) {
+	public UserService(UserRespository repository, PasswordEncoder passwordEncoder) {
 		super();
 		this.repository = repository;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 
@@ -43,6 +45,8 @@ public class UserService {
 		if (repository.existsByEmail(user.getEmail()))
 			throw new Exception ("Ja esxiste usuario cadastrado com este e-mail");
 	
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		
 		repository.save(user);
 		
 		return user;
