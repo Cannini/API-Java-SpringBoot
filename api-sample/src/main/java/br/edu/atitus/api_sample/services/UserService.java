@@ -1,5 +1,8 @@
 package br.edu.atitus.api_sample.services;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -7,7 +10,7 @@ import br.edu.atitus.api_sample.entities.UserEntity;
 import br.edu.atitus.api_sample.repositories.UserRespository;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService{
 	
 	private final UserRespository repository;
 	private final PasswordEncoder passwordEncoder;
@@ -49,6 +52,15 @@ public class UserService {
 		
 		repository.save(user);
 		
+		return user;
+	}
+
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		// TODO Auto-generated method stub
+		var user = repository.findByEmail(username)
+				.orElseThrow(() -> new UsernameNotFoundException("Usuario nao encontrado"));
 		return user;
 	}
 
